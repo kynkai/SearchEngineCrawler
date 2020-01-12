@@ -1,8 +1,11 @@
 {
     "name": "kynkai/search-engine-crawler",
-    "description": "",
+    "description": "SearchEngineCrawler Dump the data from the search engines",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "php","search","engine","kynkai","crawler"
+    ],
     "authors": [
         {
             "name": "haoquach",
