@@ -9,11 +9,14 @@ class ImageItem{
 
     public $src;
 
-    public function __construct($src,$link = null,$title = null){
+    public $cite;
+
+    public function __construct($src,$link = null,$title = null,$cite = null){
 
         $this->title = $title;
         $this->link = $link;
         $this->src = $src;
+        $this->cite = $cite;
     }
 
 }

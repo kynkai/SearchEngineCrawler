@@ -1,16 +1,10 @@
 <?php
 namespace SearchEnginePartner;
 
-use Zend\Http\Client;
-use Zend\Http\Request;
 use Zend\Http\Response;
 
 
-abstract class SearchEnginePartnerAbstract{
-
-    public const QUERY = "QUERY";
-
-    public const IMAGE = "IMAGE";
+abstract class SearchEnginePartnerAbstract extends Client{
 
     public $host;
 
@@ -24,34 +18,21 @@ abstract class SearchEnginePartnerAbstract{
 
     public $location;
 
-    public $client;
-
     public $body;
 
     public $response;
 
-    public function __construct(Client $client = null){
+    public function __construct(){
 
-        $this->client = $client ?: self::defaultClient();
         $this->request = self::defaultRequest();
+
+        parent::__construct();
 
     }
 
     public function getRequest(){
 
         return $this->request;
-
-    }
-
-    public function getClient(){
-
-        return $this->client;
-
-    }
-
-    public function getSearchResponse(Response $response){
-
-        return $response->getContent();
 
     }
 
@@ -69,7 +50,7 @@ abstract class SearchEnginePartnerAbstract{
 
         $request->setUri($query);
 
-        $response = $this->client->send(
+        $response = $this->send(
             $request
         );
 
@@ -85,7 +66,7 @@ abstract class SearchEnginePartnerAbstract{
 
         $request->setUri($queryImage);
 
-        $response = $this->client->send(
+        $response = $this->send(
             $request
         );
 
@@ -101,33 +82,11 @@ abstract class SearchEnginePartnerAbstract{
 
         $request->setUri($queryVideo);
 
-        $response = $this->client->send(
+        $response = $this->send(
             $request
         );
 
         return $response;
-
-    }
-
-    public static function defaultRequest(){
-
-        $request = new Request();
-
-        return $request;
-    }
-
-    public static function defaultClient(){
-
-        $client = new Client(null,[
-            'adapter' => 'Zend\Http\Client\Adapter\Curl',
-            "useragent" =>"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0"
-        ]);
-        
-        $client->setHeaders([
-            ['Accept-Encoding' => 'gzip,deflate,br'],
-        ]);
-
-        return $client;
 
     }
 

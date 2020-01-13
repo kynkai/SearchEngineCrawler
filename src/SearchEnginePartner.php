@@ -9,22 +9,7 @@ class SearchEnginePartner extends SearchEnginePartnerAbstract{
 
     public function getQuery(){
 
-        return $this->$host."search?q={$this->query}&first={$this->first}";
-
-    }
-
-    public function getSearchResponse(Response $response){
-
-
-    }
-
-    public function getImageResponse(Response $response){
-
-
-    }
-
-    public function getVideoResponse(Response $response){
-
+        return $this->host."search?q={$this->query}&first={$this->first}";
 
     }
 
