@@ -2,10 +2,11 @@
 namespace SearchEnginePartner\Google;
 
 use SearchEnginePartner\SearchEnginePartnerAbstract;
+use SearchEnginePartner\SuggestModal;
 
 class GoogleSearch extends SearchEnginePartnerAbstract{
 
-    public $host = "https://www.google.com/search";
+    public $host = "https://www.google.com";
 
     public $hostImage = "https://www.google.com/search?tbm=isch";
 
@@ -13,7 +14,7 @@ class GoogleSearch extends SearchEnginePartnerAbstract{
 
     public function getQuery(){
 
-        return $this->host."?q={$this->query}&start={$this->first}";
+        return $this->host."/search?q={$this->query}&start={$this->first}";
 
     }
 
@@ -26,6 +27,13 @@ class GoogleSearch extends SearchEnginePartnerAbstract{
     public function getQueryImage(){
 
         return "{$this->hostImage}&q={$this->query}&start={$this->first}";
+
+    }
+
+    public function getQuerySuggests(){
+
+        return "{$this->host}/complete/search?q={$this->query}&cp=3&client=mobile-gws-wiz-hp&xssi=t&hl=vi";
+
 
     }
 
@@ -80,6 +88,35 @@ class GoogleSearch extends SearchEnginePartnerAbstract{
         $image = $this->getListImage($doc);
 
         return $image;
+    }
+
+    public function getSuggests($option = []){
+
+        $response = parent::getSuggests();
+   
+        $myXmlString = gzdecode($response->getContent());
+
+        $suggests = $this->getListSuggests($myXmlString);
+
+        return $suggests;
+    }
+
+    public function getListSuggests($json){
+
+        $json = str_replace(")]}'","",$json);
+
+        $json = json_decode($json,true);
+
+        $ar = [];
+
+        foreach($json[0] as $key => $value) {
+            
+            array_push($ar,new SuggestModal($value));
+
+        };
+
+        return $ar;
+
     }
 
     public function getListImage($doc){

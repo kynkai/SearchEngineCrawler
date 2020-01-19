@@ -28,6 +28,11 @@ class BingSearch extends SearchEnginePartnerAbstract{
 
     }
 
+    public function getQuerySuggests(){
+
+
+    }
+
     public function getImage($option = []){
 
         $response = parent::getImage();

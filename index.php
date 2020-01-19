@@ -2,14 +2,16 @@
 
 require_once "vendor/autoload.php";
 
-require_once "src/simple_html_dom.php";
-
-use Zend\Http\Client;
-use Zend\Http\Request;
-use SearchEnginePartner\Bing\Algo;
 use SearchEnginePartner\Bing\BingSearch;
 use SearchEnginePartner\Yahoo\YahooSearch;
 use SearchEnginePartner\Google\GoogleSearch;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use SearchEnginePartner\StaticRealTime;
+
+$log = new Logger('name');
+$log->pushHandler(new StreamHandler('data/path/to/your.log', Logger::WARNING));
+StaticRealTime::$LOGGER = $log;
 
 $rs = [];
 
@@ -23,7 +25,7 @@ $bing->query = "fa";
 $bing->count = 10;
 $bing->location = "vi_Vi";
 
-$video = $image = $search = [];
+$video = $image = $search = $suggests = [];
 
 for ($i=0; $i < 1 ; $i++) { 
 
@@ -33,7 +35,9 @@ for ($i=0; $i < 1 ; $i++) {
 
     $video = $bing->getVideo();
 
-    array_push($rs,$image,$search,$video);
+    $suggests = $bing->getSuggests();
+
+    array_push($rs,$image,$search,$video,$suggests);
 
     $bing->first = $i*10;
 

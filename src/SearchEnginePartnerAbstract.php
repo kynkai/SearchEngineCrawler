@@ -1,8 +1,9 @@
 <?php
 namespace SearchEnginePartner;
 
-use Zend\Http\Response;
+require_once "src/simple_html_dom.php";
 
+use Zend\Http\Response;
 
 abstract class SearchEnginePartnerAbstract extends Client{
 
@@ -22,11 +23,15 @@ abstract class SearchEnginePartnerAbstract extends Client{
 
     public $response;
 
+    private $log;
+
     public function __construct(){
 
         $this->request = self::defaultRequest();
 
         parent::__construct();
+
+        $this->log = StaticRealTime::$LOGGER;
 
     }
 
@@ -42,6 +47,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
 
     public abstract function getQueryVideo();
 
+    public abstract function getQuerySuggests();
+
     public function getSearch($option = []){
 
         $request = self::defaultRequest();
@@ -53,6 +60,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
         $response = $this->send(
             $request
         );
+
+        $this->log->debug($query);
 
         return $response;
 
@@ -70,6 +79,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
             $request
         );
 
+        $this->log->debug($queryImage);
+
         return $response;
 
     }
@@ -81,6 +92,27 @@ abstract class SearchEnginePartnerAbstract extends Client{
         $queryVideo = $this->getQueryVideo();
 
         $request->setUri($queryVideo);
+
+        $response = $this->send(
+            $request
+        );
+
+        $this->log->debug($queryVideo);
+
+
+        return $response;
+
+    }
+
+    public function getSuggests($option = []){
+
+        $request = self::defaultRequest();
+
+        $querySuggests = $this->getQuerySuggests();
+
+        $request->setUri($querySuggests);
+
+        $this->log->warning($querySuggests);
 
         $response = $this->send(
             $request
