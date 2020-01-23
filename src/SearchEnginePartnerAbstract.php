@@ -1,7 +1,7 @@
 <?php
 namespace SearchEnginePartner;
 
-require_once "src/simple_html_dom.php";
+require_once "simple_html_dom.php";
 
 abstract class SearchEnginePartnerAbstract extends Client{
 
