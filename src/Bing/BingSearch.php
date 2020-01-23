@@ -129,8 +129,12 @@ class BingSearch extends SearchEnginePartnerAbstract{
 
         $additional = [];
 
-        $books = $doc->find('aside')[0]->find('ul')[0]->find('li');
+        $ul = $doc->find('aside')[0]->find('ul');
 
+        if(!isset($ul[0])) return $additional;
+
+        $books = $ul[0]->find('li');
+        
         foreach ($books as $book) {
 
             $a = $book->find('a');
