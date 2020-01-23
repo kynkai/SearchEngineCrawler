@@ -3,8 +3,6 @@ namespace SearchEnginePartner;
 
 require_once "src/simple_html_dom.php";
 
-use Zend\Http\Response;
-
 abstract class SearchEnginePartnerAbstract extends Client{
 
     public $host;
@@ -55,6 +53,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
 
         $query = $this->getQuery();
 
+        if(!$query) return;
+
         $request->setUri($query);
 
         $response = $this->send(
@@ -72,6 +72,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
         $request = self::defaultRequest();
 
         $queryImage = $this->getQueryImage();
+
+        if(!$queryImage) return;
 
         $request->setUri($queryImage);
 
@@ -91,6 +93,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
 
         $queryVideo = $this->getQueryVideo();
 
+        if(!$queryVideo) return;
+
         $request->setUri($queryVideo);
 
         $response = $this->send(
@@ -109,6 +113,8 @@ abstract class SearchEnginePartnerAbstract extends Client{
         $request = self::defaultRequest();
 
         $querySuggests = $this->getQuerySuggests();
+
+        if(!$querySuggests) return;
 
         $request->setUri($querySuggests);
 

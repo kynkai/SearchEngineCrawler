@@ -19,7 +19,7 @@ $bing = new BingSearch();
 
 //$bing = new YahooSearch();
 
-$bing = new GoogleSearch();
+//$bing = new GoogleSearch();
 
 $bing->query = "fa";
 $bing->count = 10;
