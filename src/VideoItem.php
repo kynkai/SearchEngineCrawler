@@ -9,11 +9,14 @@ class VideoItem{
 
     public $image;
 
-    public function __construct($link = null,ImageItem $image = null,$title = null){
+    public $data;
+
+    public function __construct($link = null,ImageItem $image = null,$title = null,$data = null){
 
         $this->title = $title;
         $this->link = $link;
         $this->image = $image;
+        $this->data = $data;
     }
 
 }

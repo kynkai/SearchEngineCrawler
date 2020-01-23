@@ -183,7 +183,12 @@ class BingSearch extends SearchEnginePartnerAbstract{
 
     public function getVideoDoc($doc){
 
+
         $image = $doc->find('img');
+
+        $vrdata = $doc->find('.vrhdata')[0];
+
+       // var_dump($vrdata->outerText());
 
         $imageItem  = null;
 
@@ -197,7 +202,9 @@ class BingSearch extends SearchEnginePartnerAbstract{
 
         $href = $doc->getAttribute("href");
 
-        return new VideoItem($href,$imageItem,$doc->text());
+        $vrdata = $vrdata->getAttribute('vrhm');
+
+        return new VideoItem($href,$imageItem,$doc->text(),$vrdata);
     }
 
 }
