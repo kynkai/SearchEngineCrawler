@@ -25,35 +25,53 @@ $ composer require kynkai/search-engine-crawler
 use SearchEnginePartner\Bing\BingSearch;
 use SearchEnginePartner\Yahoo\YahooSearch;
 use SearchEnginePartner\Google\GoogleSearch;
+use Monolog\Handler\StreamHandler;
+use SearchEnginePartner\Logger;
 
+$log = new Logger('name');
 
-$result = [];
+$log->pushHandler(new StreamHandler('data/path/to/your.log', Logger::WARNING));
 
-$search = new BingSearch();
+$rs = [];
 
-//$search = new YahooSearch();
+$bing = new BingSearch();
 
-$search = new GoogleSearch();
+//$bing = new YahooSearch();
 
-$search->query = "kynkai";
-$search->count = 20;
-$search->location = "en_ES";
+//$bing = new GoogleSearch();
 
-for ($i=0; $i < 5 ; $i++) { 
+$bing->setKeyWord("fa");
+$bing->setCount(10);
+$bing->setLocation("vi_Vi");
 
-    $default = $search->getSearch();
+$video = $image = $search = $suggests = [];
 
-    $image = $search->getImage();
+for ($i=0; $i < 1 ; $i++) { 
 
-    $video = $search->getVideo();
+    $search = $bing->getHomePageResultObject();
 
-    array_push($result,$image,$default,$video);
+    $image = $bing->getImageResultObject();
 
-    $search->first = $i*10;
+    $video = $bing->getVideoResultObject();
+
+    $suggests = $bing->getSuggestsResultObject();
+
+    array_push($rs,$image,$search,$video,$suggests);
+
+    $bing->first = $i*10;
 
 }
 
-print_r($result);
+$records = $bing->getRecords();
+
+//var_dump($records);
+
+$log->logs(Logger::DEBUG,$records);
+
+header('Content-Type: application/json');
+
+echo json_encode($rs,JSON_PRETTY_PRINT);
+
 ```
 
 ## Documentation
