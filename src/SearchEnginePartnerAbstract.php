@@ -1,143 +1,205 @@
 <?php
 namespace SearchEnginePartner;
 
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Uri\Uri;
+
 require_once "simple_html_dom.php";
 
-abstract class SearchEnginePartnerAbstract extends Client{
+abstract class SearchEnginePartnerAbstract extends Client implements DiaryRecordInterface{
 
-    public $host;
+    /**
+     * @var Uri
+     */
+    protected $host;
 
-    public $request;
+    /**
+     * @var string
+     */
+    private $keyWord;
 
-    public $query;
+    /**
+     * @var int
+     */
+    private $first = 0;
 
-    public $first = 0;
+    /**
+     * @var int
+     */
+    private $count = 0;
 
-    public $count = 0;
+    /**
+     * @var string
+     */
+    private $location;
 
-    public $location;
-
-    public $body;
-
-    public $response;
-
-    private $log;
+    /**
+     * @var string
+     */
+    private $body;
 
     public function __construct(){
 
-        $this->request = self::defaultRequest();
-
         parent::__construct();
 
-        $this->log = StaticRealTime::$LOGGER;
-
-    }
-
-    public function getRequest(){
-
-        return $this->request;
-
-    }
-
-    public abstract function getQuery();
-
-    public abstract function getQueryImage();
-
-    public abstract function getQueryVideo();
-
-    public abstract function getQuerySuggests();
-
-    public function getSearch($option = []){
-
-        $request = self::defaultRequest();
-
-        $query = $this->getQuery();
-
-        if(!$query) return;
-
-        $request->setUri($query);
-
-        $response = $this->send(
-            $request
-        );
-
-        $this->log->debug($query);
-
-        return $response;
-
-    }
-
-    public function getImage($option = []){
-
-        $request = self::defaultRequest();
-
-        $queryImage = $this->getQueryImage();
-
-        if(!$queryImage) return;
-
-        $request->setUri($queryImage);
-
-        $response = $this->send(
-            $request
-        );
-
-        $this->log->debug($queryImage);
-
-        return $response;
-
-    }
-
-    public function getVideo($option = []){
-
-        $request = self::defaultRequest();
-
-        $queryVideo = $this->getQueryVideo();
-
-        if(!$queryVideo) return;
-
-        $request->setUri($queryVideo);
-
-        $response = $this->send(
-            $request
-        );
-
-        $this->log->debug($queryVideo);
-
-
-        return $response;
-
-    }
-
-    public function getSuggests($option = []){
-
-        $request = self::defaultRequest();
-
-        $querySuggests = $this->getQuerySuggests();
-
-        if(!$querySuggests) return;
-
-        $request->setUri($querySuggests);
-
-        $this->log->warning($querySuggests);
-
-        $response = $this->send(
-            $request
-        );
-
-        return $response;
-
-    }
-
-    public function logDom($dom){
-
-        foreach ($dom as $key => $value) {
-          
-           echo $value->text();
-
-           var_dump($value->getAllAttributes());
-
+        if(is_string($this->host)){
+            $this->host = new Uri($this->host);
         }
 
     }
 
+    public function getDefaultRequest(){
+
+        $request = new Request();
+
+        $request->getHeaders()->addHeaderLine("Host",$this->getHost()->getHost());
+
+        return $request;
+    }
+
+    public abstract function getRequestHomePage();
+
+    public abstract function getRequestImage();
+
+    public abstract function getRequestVideo();
+
+    public abstract function getRequestSuggests();
+
+    public abstract function getHomePageResultObject();
+
+    public abstract function getImageResultObject();
+
+    public abstract function getVideoResultObject();
+
+    public abstract function getSuggestsResultObject();
+
+    public function getResponseHomePage(){
+
+        return $this->send($this->getRequestHomePage());
+
+    }
+
+    public function getResponseImage(){
+
+        return $this->send($this->getRequestImage());
+
+    }
+
+    public function getResponseVideo(){
+
+        return $this->send($this->getRequestVideo());
+
+    }
+
+    public function getResponseSuggests(){
+
+        return $this->send($this->getRequestSuggests());
+
+    }
+
+    /**
+     * Get the value of host
+     *
+     * @return  Uri
+     */ 
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * Get the value of first
+     *
+     * @return  int
+     */ 
+    public function getFirst()
+    {
+        return $this->first;
+    }
+
+    /**
+     * Set the value of first
+     *
+     * @param  int  $first
+     *
+     * @return  self
+     */ 
+    public function setFirst(int $first)
+    {
+        $this->first = $first;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of count
+     *
+     * @return  int
+     */ 
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * Set the value of count
+     *
+     * @param  int  $count
+     *
+     * @return  self
+     */ 
+    public function setCount(int $count)
+    {
+        $this->count = $count;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of location
+     *
+     * @return  string
+     */ 
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * Set the value of location
+     *
+     * @param  string  $location
+     *
+     * @return  self
+     */ 
+    public function setLocation(string $location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of keyWord
+     *
+     * @return  string
+     */ 
+    public function getKeyWord()
+    {
+        return $this->keyWord;
+    }
+
+    /**
+     * Set the value of keyWord
+     *
+     * @param  string  $keyWord
+     *
+     * @return  self
+     */ 
+    public function setKeyWord(string $keyWord)
+    {
+        $this->keyWord = $keyWord;
+
+        return $this;
+    }
 }

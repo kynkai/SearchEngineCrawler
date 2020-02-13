@@ -5,13 +5,12 @@ require_once "vendor/autoload.php";
 use SearchEnginePartner\Bing\BingSearch;
 use SearchEnginePartner\Yahoo\YahooSearch;
 use SearchEnginePartner\Google\GoogleSearch;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use SearchEnginePartner\StaticRealTime;
+use SearchEnginePartner\Logger;
 
 $log = new Logger('name');
+
 $log->pushHandler(new StreamHandler('data/path/to/your.log', Logger::WARNING));
-StaticRealTime::$LOGGER = $log;
 
 $rs = [];
 
@@ -21,21 +20,21 @@ $bing = new BingSearch();
 
 //$bing = new GoogleSearch();
 
-$bing->query = "fa";
-$bing->count = 10;
-$bing->location = "vi_Vi";
+$bing->setKeyWord("fa");
+$bing->setCount(10);
+$bing->setLocation("vi_Vi");
 
 $video = $image = $search = $suggests = [];
 
 for ($i=0; $i < 1 ; $i++) { 
 
-    $search = $bing->getSearch();
+    $search = $bing->getHomePageResultObject();
 
-    $image = $bing->getImage();
+    $image = $bing->getImageResultObject();
 
-    $video = $bing->getVideo();
+    $video = $bing->getVideoResultObject();
 
-    $suggests = $bing->getSuggests();
+    $suggests = $bing->getSuggestsResultObject();
 
     array_push($rs,$image,$search,$video,$suggests);
 
@@ -43,7 +42,12 @@ for ($i=0; $i < 1 ; $i++) {
 
 }
 
+$records = $bing->getRecords();
+
+//var_dump($records);
+
+$log->logs(Logger::DEBUG,$records);
 
 header('Content-Type: application/json');
 
-echo json_encode($rs);
+echo json_encode($rs,JSON_PRETTY_PRINT);

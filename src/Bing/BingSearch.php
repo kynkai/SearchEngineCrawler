@@ -1,41 +1,60 @@
 <?php
 namespace SearchEnginePartner\Bing;
 
-use Zend\Http\Response;
-
 use SearchEnginePartner\SearchItem;
 use SearchEnginePartner\SearchEnginePartnerAbstract;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Uri\Uri;
 
 class BingSearch extends SearchEnginePartnerAbstract{
 
-    public $host = "https://www.bing.com/";
+    protected $host = "https://www.bing.com/";
 
-    public function getQuery(){
+    public static function getUriPathRequestHomePage($host,$keyword,$first){
 
-        return $this->host."search?q={$this->query}&first={$this->first}";
-
-    }
-
-    public function getQueryVideo(){
-
-        return "{$this->host}/videos/asyncv2?q={$this->query}&async=content&first={$this->first}&count={$this->count}";
+        return $host."search?q={$keyword}&first={$first}";
 
     }
 
-    public function getQueryImage(){
+    public static function getUriPathRequestVideo($host,$keyword,$first,$count = 0){
 
-        return $this->host."images/async?q={$this->query}&first={$this->first}&count={$this->count}&mmasync=1";
-
-    }
-
-    public function getQuerySuggests(){
-
+        return "{$host}/videos/asyncv2?q={$keyword}&async=content&first={$first}&count={$count}";
 
     }
 
-    public function getImage($option = []){
+    public static function getUriPathRequestImage($host,$keyword,$first,$count = 0){
 
-        $response = parent::getImage();
+        return $host."images/async?q={$keyword}&first={$first}&count={$count}&mmasync=1";
+
+    }
+
+    public function getRequestHomePage(){
+        
+        return ($this->getDefaultRequest())->setUri(self::getUriPathRequestHomePage($this->getHost(),$this->getKeyWord(),$this->getFirst()));
+
+    }
+
+    public function getRequestVideo(){
+
+        return ($this->getDefaultRequest())->setUri(self::getUriPathRequestVideo($this->getHost(),$this->getKeyWord(),$this->getFirst(),$this->getCount()));
+
+    }
+
+    public function getRequestImage(){
+
+        return ($this->getDefaultRequest())->setUri(self::getUriPathRequestImage($this->getHost(),$this->getKeyWord(),$this->getFirst(),$this->getCount()));
+
+    }
+
+    public function getRequestSuggests(){
+
+        return ($this->getDefaultRequest())->setUri(self::getUriPathRequestImage($this->getHost(),$this->getKeyWord(),$this->getFirst(),$this->getCount()));
+
+    }
+
+    public function getImageResultObject(){
+
+        $response = parent::getResponseImage();
    
         $myXmlString = gzdecode($response->getContent());
           
@@ -46,9 +65,9 @@ class BingSearch extends SearchEnginePartnerAbstract{
         return $image;
     }
 
-    public function getVideo($option = []){
+    public function getVideoResultObject(){
 
-        $response = parent::getVideo();
+        $response = parent::getResponseVideo();
 
         $myXmlString = gzdecode($response->getContent());
           
@@ -59,22 +78,23 @@ class BingSearch extends SearchEnginePartnerAbstract{
         return $videos;
     }
 
-    public function getSearch($option = []){
+    public function getHomePageResultObject(){
 
-        $response = parent::getSearch();
+        $response = parent::getResponseHomePage();
 
-        $myXmlString =  gzdecode($response->getContent());
+        $myXmlString = gzdecode($response->getContent());
         
         $doc = str_get_html($myXmlString);
     
         $algos = $this->getListAlgos($doc);
 
         $additional = $this->getListAdditional($doc);
-
+        
         return [$algos,$additional];
   
     }
 
+    public function getSuggestsResultObject(){}
 
     public function getListAlgos($doc){
 

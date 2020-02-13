@@ -5,13 +5,22 @@ class SearchItem{
 
     public $additional;
 
-    public $title;
+    /**
+     * @var string
+     */
+    private $title;
 
-    public $link;
+    /**
+     * @var string
+     */
+    private $link;
 
-    public $content;
+    /**
+     * @var string
+     */
+    private $content;
 
-    public function __construct($title,$link,$content,$additional = null){
+    public function __construct(string $title,string $link,string $content,$additional = null){
 
         $this->title = $title;
         $this->link = $link;
@@ -19,10 +28,76 @@ class SearchItem{
         $this->additional = $additional;
     }
 
-    public function setAdditional($additional){
 
-        $this->additional = $additional;
-
+    /**
+     * Get the value of title
+     *
+     * @return  string
+     */ 
+    public function getTitle()
+    {
+        return $this->title;
     }
 
+    /**
+     * Set the value of title
+     *
+     * @param  string  $title
+     *
+     * @return  self
+     */ 
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of link
+     *
+     * @return  string
+     */ 
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * Set the value of link
+     *
+     * @param  string  $link
+     *
+     * @return  self
+     */ 
+    public function setLink(string $link)
+    {
+        $this->link = $link;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of content
+     *
+     * @return  string
+     */ 
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set the value of content
+     *
+     * @param  string  $content
+     *
+     * @return  self
+     */ 
+    public function setContent(string $content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
 }
