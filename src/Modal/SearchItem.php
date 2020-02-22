@@ -1,9 +1,11 @@
 <?php
-namespace SearchEnginePartner;
+namespace SearchEnginePartner\Modal;
 
-class SearchItem{
+use JsonSerializable;
 
-    public $additional;
+class SearchItem implements JsonSerializable{
+
+    private $additional;
 
     /**
      * @var string
@@ -99,5 +101,18 @@ class SearchItem{
         $this->content = $content;
 
         return $this;
+    }
+
+    public function jsonSerialize() {
+        return $this->toArray();
+    }
+
+    public function toArray(){
+        return [
+            "link" => $this->getLink(),
+            "title" =>$this->getTitle(),
+            "content" =>$this->getContent(),
+        ];
+
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace SearchEnginePartner\Google;
-use SearchEnginePartner\SearchItem;
+
+use SearchEnginePartner\Modal\SearchItem;
 
 class GSearchItem extends SearchItem{
 

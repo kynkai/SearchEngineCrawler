@@ -1,5 +1,5 @@
 <?php
-namespace SearchEnginePartner;
+namespace SearchEnginePartner\Modal;
 
 use JsonSerializable;
 

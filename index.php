@@ -1,52 +1,45 @@
 <?php
-
 require_once "vendor/autoload.php";
 
+use SearchEnginePartner\Modal\Param\SearchParam;
 use SearchEnginePartner\Bing\BingSearch;
-use SearchEnginePartner\Yahoo\YahooSearch;
-use SearchEnginePartner\Google\GoogleSearch;
-use Monolog\Handler\StreamHandler;
-use SearchEnginePartner\Logger;
-
-$log = new Logger('name');
-
-$log->pushHandler(new StreamHandler('data/path/to/your.log', Logger::WARNING));
 
 $rs = [];
 
-$bing = new BingSearch();
+$video = $image = $search = $suggests = $algos = $additionals = [];
 
-//$bing = new YahooSearch();
+$param = new SearchParam();
 
-//$bing = new GoogleSearch();
+$param->setKeyWord("fa");
+$param->setCount(33);
+//
+$param->setLocation("en-in");
+//$param->setLocation("nl-nl");
+//$param->setLocation("vi-vn");
 
-$bing->setKeyWord("fa");
-$bing->setCount(10);
-$bing->setLocation("vi_Vi");
+$bingSearch = new BingSearch(); $bingSearch->setSearchParam($param);
 
-$video = $image = $search = $suggests = [];
+$imageResponse = $bingSearch->getImage();
 
-for ($i=0; $i < 1 ; $i++) { 
+$image = $imageResponse->getImageItem();
 
-    $search = $bing->getHomePageResultObject();
+//var_dump($image);return;
 
-    $image = $bing->getImageResultObject();
+$suggestsResponse = $bingSearch->getSuggests();
 
-    $video = $bing->getVideoResultObject();
+$suggests = $suggestsResponse->getSuggestModals();
 
-    $suggests = $bing->getSuggestsResultObject();
+$homeResponse = $bingSearch->getHomePage();
 
-    array_push($rs,$image,$search,$video,$suggests);
+$search = $homeResponse->getAlgos();
 
-    $bing->first = $i*10;
+$additionals = $homeResponse->getAdditionals();
 
-}
+$videoResponse = $bingSearch->getVideo();
 
-$records = $bing->getRecords();
+$video = $videoResponse->getVideoItem();
 
-//var_dump($records);
-
-$log->logs(Logger::DEBUG,$records);
+array_push($rs,$search,$image,$video,$suggests,$additionals);
 
 header('Content-Type: application/json');
 

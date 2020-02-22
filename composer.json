@@ -14,12 +14,20 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "zendframework/zend-http": "^2.11",
-        "monolog/monolog": "^2.0"
+        "laminas/laminas-http": "^2.11",
+        "laminas/laminas-session": "^2.9"
     },
     "autoload": {
         "psr-4": {
             "SearchEnginePartner\\": "src/"
+        },
+        "files": ["src/functions.php"]
+    },
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "git@github.com:kynkai/ModuleBase.git"
         }
-    }
+    ]
+    
 }

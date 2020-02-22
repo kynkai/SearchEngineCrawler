@@ -1,5 +1,5 @@
 <?php
-namespace SearchEnginePartner;
+namespace SearchEnginePartner\Modal;
 
 class Additional implements \JsonSerializable{
 
@@ -26,7 +26,6 @@ class Additional implements \JsonSerializable{
     }
 
     public function toArray(){
-
         return [
             "link" => $this->getLink(),
             "name" =>$this->getName(),

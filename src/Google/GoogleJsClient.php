@@ -1,5 +1,6 @@
 <?php
 namespace SearchEnginePartner\Google;
+use Laminas\Http\Request;
 
 class GoogleJsClient extends GoogleClient{
 
@@ -25,7 +26,7 @@ class GoogleJsClient extends GoogleClient{
 
     }
 
-    public function send(?\Zend\Http\Request $request = null){
+    public function send(Request $request = null){
 
         $uri = $this->getModuleUri($this->name);
 

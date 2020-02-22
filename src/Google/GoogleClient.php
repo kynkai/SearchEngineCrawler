@@ -2,7 +2,8 @@
 namespace SearchEnginePartner\Google;
 
 use SearchEnginePartner\Client;
-use SearchEnginePartner\Request;
+
+use Laminas\Http\Request;
 
 function isGzipped($in) {
     if (mb_strpos($in , "\x1f" . "\x8b" . "\x08")===0) {
@@ -35,7 +36,7 @@ class GoogleClient extends Client {
         return $request;
     }
 
-    public function send(?\Zend\Http\Request $request = null)
+    public function send(Request $request = null)
     {
         $response = parent::send($request);
 

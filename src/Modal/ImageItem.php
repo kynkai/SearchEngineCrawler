@@ -1,17 +1,7 @@
 <?php
-namespace SearchEnginePartner;
+namespace SearchEnginePartner\Modal;
 
-class ImageItem implements \JsonSerializable{
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $link;
+class ImageItem extends NTL implements \JsonSerializable{
 
     /**
      * @var string
@@ -19,66 +9,23 @@ class ImageItem implements \JsonSerializable{
     private $src;
 
     /**
+     * @var NTL
+     */
+    private $host;
+
+    /**
      * @var string
      */
     private $cite;
 
-    public function __construct(string $src,string $link = null,string $title = null,string $cite = null){
+    public function __construct(string $src,string $link = null,string $title = null,string $cite = null,NTL $host = null){
 
-        $this->title = $title;
-        $this->link = $link;
+        parent::__construct("",$title,$link);
+
         $this->src = $src;
         $this->cite = $cite;
+        $this->host = $host;
 
-    }
-
-
-    /**
-     * Get the value of title
-     *
-     * @return  string
-     */ 
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set the value of title
-     *
-     * @param  string  $title
-     *
-     * @return  self
-     */ 
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of link
-     *
-     * @return  string
-     */ 
-    public function getLink()
-    {
-        return $this->link;
-    }
-
-    /**
-     * Set the value of link
-     *
-     * @param  string  $link
-     *
-     * @return  self
-     */ 
-    public function setLink(string $link)
-    {
-        $this->link = $link;
-
-        return $this;
     }
 
     /**
@@ -140,7 +87,18 @@ class ImageItem implements \JsonSerializable{
             "link" => $this->getLink(),
             "src" =>$this->getSrc(),
             "cite" =>$this->getCite(),
+            "host" =>$this->getHost(),
         ];
 
+    }
+
+    /**
+     * Get the value of host
+     *
+     * @return  NTL
+     */ 
+    public function getHost()
+    {
+        return $this->host;
     }
 }

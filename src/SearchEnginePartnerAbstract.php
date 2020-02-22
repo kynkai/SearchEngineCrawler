@@ -2,59 +2,23 @@
 namespace SearchEnginePartner;
 
 use Zend\Http\PhpEnvironment\Request;
-use Zend\Uri\Uri;
+use SearchEnginePartner\Modal\Param\SearchParam;
 
 require_once "simple_html_dom.php";
 
 abstract class SearchEnginePartnerAbstract extends Client implements DiaryRecordInterface{
 
     /**
-     * @var Uri
+     * @var SearchParam
      */
-    protected $host;
+    private $searchParam;
 
-    /**
-     * @var string
-     */
-    private $keyWord;
-
-    /**
-     * @var int
-     */
-    private $first = 0;
-
-    /**
-     * @var int
-     */
-    private $count = 0;
-
-    /**
-     * @var string
-     */
-    private $location;
-
-    /**
-     * @var string
-     */
-    private $body;
-
-    public function __construct(){
-
+    public function __construct(SearchParam $searchParam = null)
+    {
+        $this->searchParam = $searchParam;
+        
         parent::__construct();
 
-        if(is_string($this->host)){
-            $this->host = new Uri($this->host);
-        }
-
-    }
-
-    public function getDefaultRequest(){
-
-        $request = new Request();
-
-        $request->getHeaders()->addHeaderLine("Host",$this->getHost()->getHost());
-
-        return $request;
     }
 
     public abstract function getRequestHomePage();
@@ -65,140 +29,64 @@ abstract class SearchEnginePartnerAbstract extends Client implements DiaryRecord
 
     public abstract function getRequestSuggests();
 
-    public abstract function getHomePageResultObject();
+    public abstract function getResponseHomePage();
 
-    public abstract function getImageResultObject();
+    public abstract function getResponseImage();
 
-    public abstract function getVideoResultObject();
+    public abstract function getResponseVideo();
 
-    public abstract function getSuggestsResultObject();
+    public abstract function getResponseSuggests();
 
-    public function getResponseHomePage(){
+    public function responseCover(Response $response){
 
-        return $this->send($this->getRequestHomePage());
-
-    }
-
-    public function getResponseImage(){
-
-        return $this->send($this->getRequestImage());
+        return $response;
 
     }
 
-    public function getResponseVideo(){
+    public function getHomePage(){
 
-        return $this->send($this->getRequestVideo());
+        return responseCover($this->send($this->getRequestHomePage()),$this->getResponseHomePage());
 
     }
 
-    public function getResponseSuggests(){
+    public function getImage(){
 
-        return $this->send($this->getRequestSuggests());
+        return responseCover($this->send($this->getRequestImage()),$this->getResponseImage());
+
+    }
+
+    public function getVideo(){
+
+        return responseCover($this->send($this->getRequestVideo()),$this->getResponseVideo());
+
+    }
+
+    public function getSuggests(){
+
+        return responseCover($this->send($this->getRequestSuggests()),$this->getResponseSuggests());
 
     }
 
     /**
-     * Get the value of host
+     * Get the value of searchParam
      *
-     * @return  Uri
+     * @return  SearchParam
      */ 
-    public function getHost()
+    public function getSearchParam()
     {
-        return $this->host;
+        return $this->searchParam;
     }
 
     /**
-     * Get the value of first
+     * Set the value of searchParam
      *
-     * @return  int
-     */ 
-    public function getFirst()
-    {
-        return $this->first;
-    }
-
-    /**
-     * Set the value of first
-     *
-     * @param  int  $first
+     * @param  SearchParam  $searchParam
      *
      * @return  self
      */ 
-    public function setFirst(int $first)
+    public function setSearchParam(SearchParam $searchParam)
     {
-        $this->first = $first;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of count
-     *
-     * @return  int
-     */ 
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    /**
-     * Set the value of count
-     *
-     * @param  int  $count
-     *
-     * @return  self
-     */ 
-    public function setCount(int $count)
-    {
-        $this->count = $count;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of location
-     *
-     * @return  string
-     */ 
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
-     * Set the value of location
-     *
-     * @param  string  $location
-     *
-     * @return  self
-     */ 
-    public function setLocation(string $location)
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of keyWord
-     *
-     * @return  string
-     */ 
-    public function getKeyWord()
-    {
-        return $this->keyWord;
-    }
-
-    /**
-     * Set the value of keyWord
-     *
-     * @param  string  $keyWord
-     *
-     * @return  self
-     */ 
-    public function setKeyWord(string $keyWord)
-    {
-        $this->keyWord = $keyWord;
+        $this->searchParam = $searchParam;
 
         return $this;
     }
