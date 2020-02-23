@@ -1,5 +1,5 @@
 <?php
-namespace SearchEnginePartner\Google;
+namespace SearchEnginePartner\Google\Modal;
 
 use SearchEnginePartner\Modal\SearchItem;
 

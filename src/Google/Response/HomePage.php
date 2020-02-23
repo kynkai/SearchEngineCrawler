@@ -1,9 +1,10 @@
 <?php
-namespace SearchEnginePartner\Bing\Response;
+namespace SearchEnginePartner\Google\Response;
 
-use SearchEnginePartner\Bing\Response;
-use SearchEnginePartner\Bing\Modal\Algo;
-use SearchEnginePartner\Bing\Modal\Additional;
+use SearchEnginePartner\Google\Response;
+use SearchEnginePartner\Google\Modal\Algo;
+use SearchEnginePartner\Google\Modal\Additional;
+use SearchEnginePartner\Google\Modal\GSearchItem;
 
 class HomePage extends Response{
 
@@ -13,35 +14,73 @@ class HomePage extends Response{
     private $algos;
 
         /**
+     * @var GSearchItem[]
+     */
+    private $gSearchItems;
+
+        /**
      * @var Additional[]
      */
     private $additionals;
 
     public function init()
     {
+        //var_dump($this->getContent());
         
         if($doc = $this->getDoc()){
 
             $this->algos = $this->getListAlgos($doc);
             $this->additionals = $this->getListAdditional($doc);
+            $this->gSearchItem = $this->algos;
 
         }
         
     }
 
-    public function getListAlgos($doc){
+    public function getListGSearchItem($doc){
 
         $algos= [];
 
-        $books = $doc->find('.b_algo');
-    
+        $books = $doc->find('.srg')[0]->find('.g');
+
         foreach ($books as $book) {
+
+            if($book->parent()->tag == "div"){
+
+                if($book = $this->getGSearchItem($book)){
+
+                    array_push($algos,$book);
     
-            array_push($algos,$this->getSearchItemDoc($book));
-    
+                }
+
+            }
+            
         }
 
         return $algos;
+
+    }
+
+    public function getGSearchItem($doc){
+
+        $a = $doc->find('a');
+
+        $cite = $doc->find('cite');
+
+        $span = $doc->find('span');
+
+        if(isset($a[0]) && isset($cite[0]) && isset($span[2])){
+
+            $algo = new GSearchItem($a[0]->text(),$a[0]->getAttribute("href"),$span[2]->text());
+
+            return $algo;
+
+        }
+    }
+
+    public function getListAlgos($doc){
+
+        return $this->getListGSearchItem($doc);
 
     }
 
@@ -49,7 +88,11 @@ class HomePage extends Response{
 
         $additional = [];
 
-        $ul = $doc->find('aside')[0]->find('ul');
+        $aside = $doc->find('aside');
+
+        if(!$aside) return $additional;
+
+        $ul = $aside[0]->find('ul');
 
         if(!isset($ul[0])) return $additional;
 
@@ -116,5 +159,16 @@ class HomePage extends Response{
     public function getAdditionals()
     {
         return $this->additionals;
+    }
+
+
+    /**
+     * Get the value of gSearchItems
+     *
+     * @return  GSearchItem[]
+     */ 
+    public function getGSearchItems()
+    {
+        return $this->gSearchItems;
     }
 }
