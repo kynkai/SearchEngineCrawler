@@ -51,7 +51,9 @@ class Image extends _Response{
             $host = $this->getNtlDoc($as[1]);
         }
 
-        $src = $doc->getAttribute("src");
+        $img = $doc->find("img")[0];
+
+        $src = $img->getAttribute("src");
 
         return new ImageItem($src,$as[0]->getAttribute("href"),$span->text(),null,$host);
 
