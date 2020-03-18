@@ -47,7 +47,7 @@ class Image extends _Response{
 
         $span = $doc->find("span")[0];
 
-        $host = null;
+        $host = new NTL("");
 
         if(isset($as[1])){ 
 
@@ -73,8 +73,6 @@ class Image extends _Response{
     private function getNtlDoc($doc){
 
         $title = $doc->getAttribute("title");
-
-        var_dump($title);
 
         return new NTL($doc->text(),$title,$doc->getAttribute("href"));
 
