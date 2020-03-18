@@ -10,20 +10,18 @@ $video = $image = $search = $suggests = $algos = $additionals = [];
 
 $param = new SearchParam();
 
-$param->setKeyWord("fa");
+$param->setKeyWord("fafafds");
 $param->setCount(33);
 //
 $param->setLocation("en-in");
 //$param->setLocation("nl-nl");
-//$param->setLocation("vi-vn");
+$param->setLocation("vi-vn");
 
 $bingSearch = new BingSearch(); $bingSearch->setSearchParam($param);
 
 $imageResponse = $bingSearch->getImage();
 
 $image = $imageResponse->getImageItem();
-
-//var_dump($image);return;
 
 $suggestsResponse = $bingSearch->getSuggests();
 
@@ -38,6 +36,8 @@ $additionals = $homeResponse->getAdditionals();
 $videoResponse = $bingSearch->getVideo();
 
 $video = $videoResponse->getVideoItem();
+
+
 
 array_push($rs,$search,$image,$video,$suggests,$additionals);
 

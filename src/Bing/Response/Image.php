@@ -47,7 +47,10 @@ class Image extends _Response{
 
         $span = $doc->find("span")[0];
 
+        $host = null;
+
         if(isset($as[1])){ 
+
             $host = $this->getNtlDoc($as[1]);
         }
 
@@ -55,13 +58,25 @@ class Image extends _Response{
 
         $src = $img->getAttribute("src");
 
-        return new ImageItem($src,$as[0]->getAttribute("href"),$span->text(),null,$host);
+        $imageItem = new ImageItem($src,$as[0]->getAttribute("href"),$span->text(),null,$host);
+
+        $data = str_replace("&quot;","'",($as[0]->getAttribute("m")));
+
+        //$data = json_decode($data);
+
+        $imageItem->setData($data);
+
+        return $imageItem;
 
     }
 
     private function getNtlDoc($doc){
 
-        return new NTL($doc->text(),$doc->getAttribute("title"),$doc->getAttribute("href"));
+        $title = $doc->getAttribute("title");
+
+        var_dump($title);
+
+        return new NTL($doc->text(),$title,$doc->getAttribute("href"));
 
     }
 
